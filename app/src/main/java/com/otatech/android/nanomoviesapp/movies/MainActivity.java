@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.otatech.android.nanomoviesapp.movies.model.Movie;
+import com.otatech.android.nanomoviesapp.movies.utilities.Movie;
 
-public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callback {
+public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
 
     private boolean mTwoPane;
 
@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             mTwoPane = true;
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container,
-                        new DetailActivityFragment(), DetailActivityFragment.TAG).commit();
+                        new DetailFragment(), DetailFragment.TAG).commit();
             }
         } else {
             mTwoPane = false;
@@ -30,17 +30,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public void onItemSelected(Movie movie) {
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putParcelable(DetailActivityFragment.DETAIL_MOVIE, movie);
+            arguments.putParcelable(DetailFragment.DETAIL_MOVIE, movie);
 
-            DetailActivityFragment fragment = new DetailActivityFragment();
+            DetailFragment fragment = new DetailFragment();
             fragment.setArguments(arguments);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_container, fragment, DetailActivityFragment.TAG)
+                    .replace(R.id.movie_detail_container, fragment, DetailFragment.TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
-                    .putExtra(DetailActivityFragment.DETAIL_MOVIE, movie);
+                    .putExtra(DetailFragment.DETAIL_MOVIE, movie);
             startActivity(intent);
         }
     }

@@ -10,15 +10,4 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/trailer_name"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="@dimen/text_size"
-        android:padding="5dp"
-        android:gravity="bottom|left"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:layout_gravity="left|bottom"/>
-
 </FrameLayout>

@@ -24,12 +24,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.linearlistview.LinearListView;
-import com.otatech.android.nanomoviesapp.movies.adapters.ReviewAdapter;
-import com.otatech.android.nanomoviesapp.movies.adapters.TrailerAdapter;
-import com.otatech.android.nanomoviesapp.movies.data.MovieContract;
-import com.otatech.android.nanomoviesapp.movies.model.Movie;
-import com.otatech.android.nanomoviesapp.movies.model.Review;
-import com.otatech.android.nanomoviesapp.movies.model.Trailer;
+import com.otatech.android.nanomoviesapp.movies.utilities.Adapters;
+import com.otatech.android.nanomoviesapp.movies.utilities.DbContract;
+import com.otatech.android.nanomoviesapp.movies.utilities.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,29 +47,29 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment {
+public class DetailFragment extends Fragment {
 
-    public static final String TAG = DetailActivityFragment.class.getSimpleName();
+    public static final String TAG = DetailFragment.class.getSimpleName();
 
     static final String DETAIL_MOVIE = "DETAIL_MOVIE";
 
-    private Movie mMovie;
+    private Movie movie;
 
-    private ImageView mImageView;
+    private ImageView ivCover;
 
-    private TextView mTitleView;
-    private TextView mOverviewView;
-    private TextView mDateView;
-    private TextView mVoteAverageView;
+    private TextView tvTitle;
+    private TextView tvPlot;
+    private TextView tvRelease;
+    private TextView tvRatings;
 
-    private LinearListView mTrailersView;
-    private LinearListView mReviewsView;
+    private LinearListView llvTrailers;
+    private LinearListView llvReviews;
 
-    private CardView mReviewsCardview;
-    private CardView mTrailersCardview;
+    private CardView cvReviewSpace;
+    private CardView cvTrailerSpace;
 
-    private TrailerAdapter mTrailerAdapter;
-    private ReviewAdapter mReviewAdapter;
+    private Adapters.TrailerAdapter trailerAdapter;
+    private Adapters.ReviewAdapter reviewAdapter;
 
     private ScrollView mDetailLayout;
 
@@ -81,9 +78,9 @@ public class DetailActivityFragment extends Fragment {
     private ShareActionProvider mShareActionProvider;
 
     // the first trailer video to share
-    private Trailer mTrailer;
+    private Movie.Trailer mTrailer;
 
-    public DetailActivityFragment() {
+    public DetailFragment() {
     }
 
     @Override
@@ -94,20 +91,20 @@ public class DetailActivityFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mMovie != null) {
+        if (movie != null) {
             inflater.inflate(R.menu.menu_fragment_detail, menu);
 
             final MenuItem action_favorite = menu.findItem(R.id.action_favorite);
             MenuItem action_share = menu.findItem(R.id.action_share);
             /*
-            action_favorite.setIcon(Utility.isFavorited(getActivity(), mMovie.getId()) == 1 ?
+            action_favorite.setIcon(Utility.intWinner(getActivity(), movie.getIntId()) == 1 ?
                     R.drawable.abc_btn_rating_star_on_mtrl_alpha :
                     R.drawable.abc_btn_rating_star_off_mtrl_alpha);
             */
             new AsyncTask<Void, Void, Integer>() {
                 @Override
                 protected Integer doInBackground(Void... params) {
-                    return Utility.isFavorited(getActivity(), mMovie.getId());
+                    return Movie.Utility.intWinner(getActivity(), movie.getIntId());
                 }
 
                 @Override
@@ -131,13 +128,13 @@ public class DetailActivityFragment extends Fragment {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_favorite:
-                if (mMovie != null) {
+                if (movie != null) {
                     // check if movie is in favorites or not
                     new AsyncTask<Void, Void, Integer>() {
 
                         @Override
                         protected Integer doInBackground(Void... params) {
-                            return Utility.isFavorited(getActivity(), mMovie.getId());
+                            return Movie.Utility.intWinner(getActivity(), movie.getIntId());
                         }
 
                         @Override
@@ -149,9 +146,9 @@ public class DetailActivityFragment extends Fragment {
                                     @Override
                                     protected Integer doInBackground(Void... params) {
                                         return getActivity().getContentResolver().delete(
-                                                MovieContract.MovieEntry.CONTENT_URI,
-                                                MovieContract.MovieEntry.COLUMN_MOVIE_ID + " = ?",
-                                                new String[]{Integer.toString(mMovie.getId())}
+                                                DbContract.MovieEntry.MOVIEURI,
+                                                DbContract.MovieEntry.MOVIEID + " = ?",
+                                                new String[]{Integer.toString(movie.getIntId())}
                                         );
                                     }
 
@@ -174,15 +171,15 @@ public class DetailActivityFragment extends Fragment {
                                     protected Uri doInBackground(Void... params) {
                                         ContentValues values = new ContentValues();
 
-                                        values.put(MovieContract.MovieEntry.COLUMN_MOVIE_ID, mMovie.getId());
-                                        values.put(MovieContract.MovieEntry.COLUMN_TITLE, mMovie.getTitle());
-                                        values.put(MovieContract.MovieEntry.COLUMN_IMAGE, mMovie.getImage());
-                                        values.put(MovieContract.MovieEntry.COLUMN_IMAGE2, mMovie.getImage2());
-                                        values.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, mMovie.getOverview());
-                                        values.put(MovieContract.MovieEntry.COLUMN_RATING, mMovie.getRating());
-                                        values.put(MovieContract.MovieEntry.COLUMN_DATE, mMovie.getDate());
+                                        values.put(DbContract.MovieEntry.MOVIEID, movie.getIntId());
+                                        values.put(DbContract.MovieEntry.MOVIETITLE, movie.getStrTitle());
+                                        values.put(DbContract.MovieEntry.MOVIECOVER, movie.getStrCover());
+                                        values.put(DbContract.MovieEntry.MOVIEPOSTER, movie.getStrBackDrop());
+                                        values.put(DbContract.MovieEntry.MOVIEPLOT, movie.getStrPlot());
+                                        values.put(DbContract.MovieEntry.MOVIERATING, movie.getIntRatings());
+                                        values.put(DbContract.MovieEntry.MOVIERELEASE, movie.getStrRelease());
 
-                                        return getActivity().getContentResolver().insert(MovieContract.MovieEntry.CONTENT_URI,
+                                        return getActivity().getContentResolver().insert(DbContract.MovieEntry.MOVIEURI,
                                                 values);
                                     }
 
@@ -212,70 +209,70 @@ public class DetailActivityFragment extends Fragment {
 
         Bundle arguments = getArguments();
         if (arguments != null) {
-            mMovie = arguments.getParcelable(DetailActivityFragment.DETAIL_MOVIE);
+            movie = arguments.getParcelable(DetailFragment.DETAIL_MOVIE);
         }
 
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
         mDetailLayout = (ScrollView) rootView.findViewById(R.id.detail_layout);
 
-        if (mMovie != null) {
+        if (movie != null) {
             mDetailLayout.setVisibility(View.VISIBLE);
         } else {
             mDetailLayout.setVisibility(View.INVISIBLE);
         }
 
-        mImageView = (ImageView) rootView.findViewById(R.id.detail_image);
+        ivCover = (ImageView) rootView.findViewById(R.id.detail_image);
 
-        mTitleView = (TextView) rootView.findViewById(R.id.detail_title);
-        mOverviewView = (TextView) rootView.findViewById(R.id.detail_overview);
-        mDateView = (TextView) rootView.findViewById(R.id.detail_date);
-        mVoteAverageView = (TextView) rootView.findViewById(R.id.detail_vote_average);
+        tvTitle = (TextView) rootView.findViewById(R.id.detail_title);
+        tvPlot = (TextView) rootView.findViewById(R.id.detail_overview);
+        tvRelease = (TextView) rootView.findViewById(R.id.detail_date);
+        tvRatings = (TextView) rootView.findViewById(R.id.detail_vote_average);
 
-        mTrailersView = (LinearListView) rootView.findViewById(R.id.detail_trailers);
-        mReviewsView = (LinearListView) rootView.findViewById(R.id.detail_reviews);
+        llvTrailers = (LinearListView) rootView.findViewById(R.id.detail_trailers);
+        llvReviews = (LinearListView) rootView.findViewById(R.id.detail_reviews);
 
-        mReviewsCardview = (CardView) rootView.findViewById(R.id.detail_reviews_cardview);
-        mTrailersCardview = (CardView) rootView.findViewById(R.id.detail_trailers_cardview);
+        cvReviewSpace = (CardView) rootView.findViewById(R.id.detail_reviews_cardview);
+        cvTrailerSpace = (CardView) rootView.findViewById(R.id.detail_trailers_cardview);
 
-        mTrailerAdapter = new TrailerAdapter(getActivity(), new ArrayList<Trailer>());
-        mTrailersView.setAdapter(mTrailerAdapter);
+        trailerAdapter = new Adapters.TrailerAdapter(getActivity(), new ArrayList<Movie.Trailer>());
+        llvTrailers.setAdapter(trailerAdapter);
 
-        mTrailersView.setOnItemClickListener(new LinearListView.OnItemClickListener() {
+        llvTrailers.setOnItemClickListener(new LinearListView.OnItemClickListener() {
             @Override
             public void onItemClick(LinearListView linearListView, View view,
                                     int position, long id) {
-                Trailer trailer = mTrailerAdapter.getItem(position);
+                Movie.Trailer trailer = trailerAdapter.getItem(position);
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://www.youtube.com/watch?v=" + trailer.getKey()));
+                intent.setData(Uri.parse("http://www.youtube.com/watch?v=" + trailer.getStrKey()));
                 startActivity(intent);
             }
         });
 
-        mReviewAdapter = new ReviewAdapter(getActivity(), new ArrayList<Review>());
-        mReviewsView.setAdapter(mReviewAdapter);
+        reviewAdapter = new Adapters.ReviewAdapter(getActivity(), new ArrayList<Movie.Review>());
+        llvReviews.setAdapter(reviewAdapter);
 
-        if (mMovie != null) {
+        if (movie != null) {
 
-            String image_url = Utility.buildImageUrl(342, mMovie.getImage2());
+            String image_url = Movie.Utility.strBuildURL(342, movie.getStrBackDrop());
 
-            Glide.with(this).load(image_url).into(mImageView);
+            Glide.with(this).load(image_url).into(ivCover);
 
-            mTitleView.setText(mMovie.getTitle());
-            mOverviewView.setText(mMovie.getOverview());
+            tvTitle.setText(movie.getStrTitle());
+            tvPlot.setText(movie.getStrPlot());
 
-            String movie_date = mMovie.getDate();
+            String movie_date = movie.getStrRelease();
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 String date = DateUtils.formatDateTime(getActivity(),
                         formatter.parse(movie_date).getTime(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR);
-                mDateView.setText(date);
+                tvRelease.setText(date);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-            mVoteAverageView.setText(Integer.toString(mMovie.getRating()));
+            tvRatings.setText(Integer.toString(movie.getIntRatings()));
         }
 
         return rootView;
@@ -284,9 +281,9 @@ public class DetailActivityFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (mMovie != null) {
-            new FetchTrailersTask().execute(Integer.toString(mMovie.getId()));
-            new FetchReviewsTask().execute(Integer.toString(mMovie.getId()));
+        if (movie != null) {
+            new FetchTrailersTask().execute(Integer.toString(movie.getIntId()));
+            new FetchReviewsTask().execute(Integer.toString(movie.getIntId()));
         }
     }
 
@@ -294,26 +291,26 @@ public class DetailActivityFragment extends Fragment {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, mMovie.getTitle() + " " +
-                "http://www.youtube.com/watch?v=" + mTrailer.getKey());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, movie.getStrTitle() + " " +
+                "http://www.youtube.com/watch?v=" + mTrailer.getStrKey());
         return shareIntent;
     }
 
-    public class FetchTrailersTask extends AsyncTask<String, Void, List<Trailer>> {
+    public class FetchTrailersTask extends AsyncTask<String, Void, List<Movie.Trailer>> {
 
         private final String LOG_TAG = FetchTrailersTask.class.getSimpleName();
 
-        private List<Trailer> getTrailersDataFromJson(String jsonStr) throws JSONException {
+        private List<Movie.Trailer> getTrailersDataFromJson(String jsonStr) throws JSONException {
             JSONObject trailerJson = new JSONObject(jsonStr);
             JSONArray trailerArray = trailerJson.getJSONArray("results");
 
-            List<Trailer> results = new ArrayList<>();
+            List<Movie.Trailer> results = new ArrayList<>();
 
             for(int i = 0; i < trailerArray.length(); i++) {
                 JSONObject trailer = trailerArray.getJSONObject(i);
                 // Only show Trailers which are on Youtube
                 if (trailer.getString("site").contentEquals("YouTube")) {
-                    Trailer trailerModel = new Trailer(trailer);
+                    Movie.Trailer trailerModel = new Movie.Trailer(trailer);
                     results.add(trailerModel);
                 }
             }
@@ -322,7 +319,7 @@ public class DetailActivityFragment extends Fragment {
         }
 
         @Override
-        protected List<Trailer> doInBackground(String... params) {
+        protected List<Movie.Trailer> doInBackground(String... params) {
 
             if (params.length == 0) {
                 return null;
@@ -394,14 +391,14 @@ public class DetailActivityFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<Trailer> trailers) {
+        protected void onPostExecute(List<Movie.Trailer> trailers) {
             if (trailers != null) {
                 if (trailers.size() > 0) {
-                    mTrailersCardview.setVisibility(View.VISIBLE);
-                    if (mTrailerAdapter != null) {
-                        mTrailerAdapter.clear();
-                        for (Trailer trailer : trailers) {
-                            mTrailerAdapter.add(trailer);
+                    cvTrailerSpace.setVisibility(View.VISIBLE);
+                    if (trailerAdapter != null) {
+                        trailerAdapter.clear();
+                        for (Movie.Trailer trailer : trailers) {
+                            trailerAdapter.add(trailer);
                         }
                     }
 
@@ -414,26 +411,26 @@ public class DetailActivityFragment extends Fragment {
         }
     }
 
-    public class FetchReviewsTask extends AsyncTask<String, Void, List<Review>> {
+    public class FetchReviewsTask extends AsyncTask<String, Void, List<Movie.Review>> {
 
         private final String LOG_TAG = FetchReviewsTask.class.getSimpleName();
 
-        private List<Review> getReviewsDataFromJson(String jsonStr) throws JSONException {
+        private List<Movie.Review> getReviewsDataFromJson(String jsonStr) throws JSONException {
             JSONObject reviewJson = new JSONObject(jsonStr);
             JSONArray reviewArray = reviewJson.getJSONArray("results");
 
-            List<Review> results = new ArrayList<>();
+            List<Movie.Review> results = new ArrayList<>();
 
             for(int i = 0; i < reviewArray.length(); i++) {
                 JSONObject review = reviewArray.getJSONObject(i);
-                results.add(new Review(review));
+                results.add(new Movie.Review(review));
             }
 
             return results;
         }
 
         @Override
-        protected List<Review> doInBackground(String... params) {
+        protected List<Movie.Review> doInBackground(String... params) {
 
             if (params.length == 0) {
                 return null;
@@ -505,14 +502,14 @@ public class DetailActivityFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(List<Review> reviews) {
+        protected void onPostExecute(List<Movie.Review> reviews) {
             if (reviews != null) {
                 if (reviews.size() > 0) {
-                    mReviewsCardview.setVisibility(View.VISIBLE);
-                    if (mReviewAdapter != null) {
-                        mReviewAdapter.clear();
-                        for (Review review : reviews) {
-                            mReviewAdapter.add(review);
+                    cvReviewSpace.setVisibility(View.VISIBLE);
+                    if (reviewAdapter != null) {
+                        reviewAdapter.clear();
+                        for (Movie.Review review : reviews) {
+                            reviewAdapter.add(review);
                         }
                     }
                 }
