@@ -3,34 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="com.otatech.android.nanomoviesapp.movies.DetailFragment" >
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/grid_item_movie_height">
+        android:layout_height="@dimen/d_movie_h">
 
          <ImageView
-            android:id="@+id/detail_image"
+            android:id="@+id/iv_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop" />
 
         <TextView
-            android:id="@+id/detail_title"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="22sp"
             android:padding="10dp"
+            android:gravity="center_horizontal"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
             android:textColor="@android:color/white"
             android:background="#80000000" />
 
      </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/detail_layout"
+        android:id="@+id/sv_layout"
         android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -40,8 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp">
-
-
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -58,14 +56,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
-                        android:text="@string/details"
+                        android:text="@string/s_lbl_title"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/detail_overview"
+                        android:id="@+id/tv_plot"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_size" />
+                        android:textSize="@dimen/d_fontsize" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -76,9 +74,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/release_date"
+                            android:text="@string/s_lbl_release"
                             android:textStyle="bold"
-                            android:textSize="@dimen/text_size" />
+                            android:textSize="@dimen/d_fontsize" />
 
                         <View
                             android:layout_width="0dp"
@@ -86,7 +84,7 @@
                             android:layout_weight="1"  />
 
                         <TextView
-                            android:id="@+id/detail_date"
+                            android:id="@+id/tv_release"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -101,9 +99,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/rating"
+                            android:text="@string/s_lbl_rating"
                             android:textStyle="bold"
-                            android:textSize="@dimen/text_size" />
+                            android:textSize="@dimen/d_fontsize" />
 
                         <View
                             android:layout_width="0dp"
@@ -111,10 +109,10 @@
                             android:layout_weight="1"  />
 
                         <TextView
-                            android:id="@+id/detail_vote_average"
+                            android:id="@+id/tv_rating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_size" />
+                            android:textSize="@dimen/d_fontsize" />
 
                     </LinearLayout>
 
@@ -123,7 +121,7 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/detail_trailers_cardview"
+                android:id="@+id/cv_trailers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -139,7 +137,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
-                        android:text="@string/trailers"
+                        android:text="@string/s_lbl_trailers"
                         android:textStyle="bold" />
 
                     <HorizontalScrollView
@@ -148,7 +146,7 @@
                         android:layout_marginTop="20dp">
 
                         <com.linearlistview.LinearListView
-                            android:id="@+id/detail_trailers"
+                            android:id="@+id/llv_trailers"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:orientation="horizontal"
@@ -162,7 +160,7 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/detail_reviews_cardview"
+                android:id="@+id/cv_reviews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -178,11 +176,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="20sp"
-                        android:text="@string/reviews"
+                        android:text="@string/s_lbl_review"
                         android:textStyle="bold" />
 
                     <com.linearlistview.LinearListView
-                        android:id="@+id/detail_reviews"
+                        android:id="@+id/llv_reviews"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
@@ -194,8 +192,5 @@
             </android.support.v7.widget.CardView>
 
         </LinearLayout>
-
-
-
     </ScrollView>
 </LinearLayout>

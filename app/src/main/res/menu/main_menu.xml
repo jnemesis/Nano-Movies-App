@@ -1,16 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_sort_by"
-        android:title="@string/action_sort_by"
+    <item android:id="@+id/i_lbl_sort"
+        android:title="@string/s_lbl_sort"
         app:showAsAction="ifRoom">
         <menu>
             <group android:checkableBehavior="single">
-                <item android:id="@+id/action_sort_by_popularity"
-                    android:title="@string/action_sort_by_popularity" />
-                <item android:id="@+id/action_sort_by_rating"
-                    android:title="@string/action_sort_by_rating" />
-                <item android:id="@+id/action_sort_by_favorite"
-                    android:title="@string/action_sort_by_favorite" />
+                <item android:id="@+id/i_btn_popular"
+                    android:title="@string/s_btn_popular" />
+                <item android:id="@+id/i_btn_rating"
+                    android:title="@string/s_btn_rating" />
+                <item android:id="@+id/i_btn_favorite"
+                    android:title="@string/s_lbl_favorite" />
             </group>
         </menu>
     </item>

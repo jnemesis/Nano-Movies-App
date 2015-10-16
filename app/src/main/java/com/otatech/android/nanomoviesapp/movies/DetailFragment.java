@@ -51,7 +51,7 @@ public class DetailFragment extends Fragment {
 
     public static final String TAG = DetailFragment.class.getSimpleName();
 
-    static final String DETAIL_MOVIE = "DETAIL_MOVIE";
+    static final String MOVIE_DETAILS = "MOVIE_FAVORITES";
 
     private Movie movie;
 
@@ -93,8 +93,8 @@ public class DetailFragment extends Fragment {
         if (movie != null) {
             inflater.inflate(R.menu.details_menu, menu);
 
-            final MenuItem miWinnerOrTool = menu.findItem(R.id.action_favorite);
-            MenuItem miPirate = menu.findItem(R.id.action_share);
+            final MenuItem miWinnerOrTool = menu.findItem(R.id.i_btn_favorite);
+            MenuItem miPirate = menu.findItem(R.id.i_btn_share);
 
             new AsyncTask<Void, Void, Integer>() {
                 @Override
@@ -103,8 +103,8 @@ public class DetailFragment extends Fragment {
                 }
 
                 @Override
-                protected void onPostExecute(Integer isFavorited) {
-                    miWinnerOrTool.setIcon(isFavorited == 1 ?
+                protected void onPostExecute(Integer intFavored) {
+                    miWinnerOrTool.setIcon(intFavored == 1 ?
                             R.drawable.prize_winner : R.drawable.tool);
                 }
             }.execute();
@@ -121,7 +121,7 @@ public class DetailFragment extends Fragment {
     public boolean onOptionsItemSelected(final MenuItem item) {
         int intId = item.getItemId();
         switch (intId) {
-            case R.id.action_favorite:
+            case R.id.i_btn_favorite:
                 if (movie != null) {
                     new AsyncTask<Void, Void, Integer>() {
                         @Override
@@ -148,7 +148,7 @@ public class DetailFragment extends Fragment {
                                         if (toasty != null) {
                                             toasty.cancel();
                                         }
-                                        toasty = Toast.makeText(getActivity(), getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT);
+                                        toasty = Toast.makeText(getActivity(), getString(R.string.s_msg_unfavorited), Toast.LENGTH_SHORT);
                                         toasty.show();
                                     }
                                 }.execute();
@@ -177,7 +177,7 @@ public class DetailFragment extends Fragment {
                                         if (toasty != null) {
                                             toasty.cancel();
                                         }
-                                        toasty = Toast.makeText(getActivity(), getString(R.string.added_to_favorites), Toast.LENGTH_SHORT);
+                                        toasty = Toast.makeText(getActivity(), getString(R.string.s_msg_favorited), Toast.LENGTH_SHORT);
                                         toasty.show();
                                     }
                                 }.execute();
@@ -196,12 +196,12 @@ public class DetailFragment extends Fragment {
 
         Bundle bundleArgs = getArguments();
         if (bundleArgs != null) {
-            movie = bundleArgs.getParcelable(DetailFragment.DETAIL_MOVIE);
+            movie = bundleArgs.getParcelable(DetailFragment.MOVIE_DETAILS);
         }
 
         View viewRoot = inflater.inflate(R.layout.details_fragment, container, false);
 
-        svDetails = (ScrollView) viewRoot.findViewById(R.id.detail_layout);
+        svDetails = (ScrollView) viewRoot.findViewById(R.id.sv_layout);
 
         if (movie != null) {
             svDetails.setVisibility(View.VISIBLE);
@@ -209,18 +209,18 @@ public class DetailFragment extends Fragment {
             svDetails.setVisibility(View.INVISIBLE);
         }
 
-        ivCover = (ImageView) viewRoot.findViewById(R.id.detail_image);
+        ivCover = (ImageView) viewRoot.findViewById(R.id.iv_image);
 
-        tvTitle = (TextView) viewRoot.findViewById(R.id.detail_title);
-        tvPlot = (TextView) viewRoot.findViewById(R.id.detail_overview);
-        tvRelease = (TextView) viewRoot.findViewById(R.id.detail_date);
-        tvRatings = (TextView) viewRoot.findViewById(R.id.detail_vote_average);
+        tvTitle = (TextView) viewRoot.findViewById(R.id.tv_title);
+        tvPlot = (TextView) viewRoot.findViewById(R.id.tv_plot);
+        tvRelease = (TextView) viewRoot.findViewById(R.id.tv_release);
+        tvRatings = (TextView) viewRoot.findViewById(R.id.tv_rating);
 
-        llvTrailers = (LinearListView) viewRoot.findViewById(R.id.detail_trailers);
-        llvReviews = (LinearListView) viewRoot.findViewById(R.id.detail_reviews);
+        llvTrailers = (LinearListView) viewRoot.findViewById(R.id.llv_trailers);
+        llvReviews = (LinearListView) viewRoot.findViewById(R.id.llv_reviews);
 
-        cvReviewSpace = (CardView) viewRoot.findViewById(R.id.detail_reviews_cardview);
-        cvTrailerSpace = (CardView) viewRoot.findViewById(R.id.detail_trailers_cardview);
+        cvReviewSpace = (CardView) viewRoot.findViewById(R.id.cv_reviews);
+        cvTrailerSpace = (CardView) viewRoot.findViewById(R.id.cv_trailers);
 
         trailerAdapter = new Adapters.TrailerAdapter(getActivity(), new ArrayList<Movie.Trailer>());
         llvTrailers.setAdapter(trailerAdapter);
@@ -319,7 +319,7 @@ public class DetailFragment extends Fragment {
                 final String APIKEY = "api_key";
 
                 Uri uriBuilt = Uri.parse(BASEURL).buildUpon()
-                        .appendQueryParameter(APIKEY, getString(R.string.api_key))
+                        .appendQueryParameter(APIKEY, getString(R.string.s_api_key))
                         .build();
 
                 URL url = new URL(uriBuilt.toString());
@@ -425,7 +425,7 @@ public class DetailFragment extends Fragment {
                 final String APIKEY = "api_key";
 
                 Uri uriBuilt = Uri.parse(BASEURL).buildUpon()
-                        .appendQueryParameter(APIKEY, getString(R.string.api_key))
+                        .appendQueryParameter(APIKEY, getString(R.string.s_api_key))
                         .build();
 
                 URL url = new URL(uriBuilt.toString());

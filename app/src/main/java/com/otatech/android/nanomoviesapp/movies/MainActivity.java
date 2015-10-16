@@ -15,10 +15,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        if (findViewById(R.id.movie_detail_container) != null) {
+        if (findViewById(R.id.fl_details) != null) {
             boolPanes = true;
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container,
+                getSupportFragmentManager().beginTransaction().replace(R.id.fl_details,
                         new DetailFragment(), DetailFragment.TAG).commit();
             }
         } else {
@@ -30,17 +30,17 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
     public void onItemSelected(Movie movie) {
         if (boolPanes) {
             Bundle bundleArgs = new Bundle();
-            bundleArgs.putParcelable(DetailFragment.DETAIL_MOVIE, movie);
+            bundleArgs.putParcelable(DetailFragment.MOVIE_DETAILS, movie);
 
             DetailFragment detailFragment = new DetailFragment();
             detailFragment.setArguments(bundleArgs);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_container, detailFragment, DetailFragment.TAG)
+                    .replace(R.id.fl_details, detailFragment, DetailFragment.TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
-                    .putExtra(DetailFragment.DETAIL_MOVIE, movie);
+                    .putExtra(DetailFragment.MOVIE_DETAILS, movie);
             startActivity(intent);
         }
     }

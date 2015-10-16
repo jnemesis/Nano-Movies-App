@@ -1,20 +1,18 @@
 <resources>
-    <string name="app_name">Nano Movies App</string>
-    <string name="action_sort_by">Sort by</string>
-    <string name="action_sort_by_popularity">Most Popular</string>
-    <string name="action_sort_by_rating">Highest Rated</string>
-    <string name="title_activity_detail">Movie Details</string>
-    <string name="rating">Rating</string>
-    <string name="release_date">Released</string>
-    <string name="details">Details</string>
-    <string name="trailers">Trailers</string>
-    <string name="reviews">Reviews</string>
-    <string name="action_favorite">Favorite</string>
-    <string name="content_authority">com.otatech.android.nanomoviesapp.movies</string>
-    <string name="removed_from_favorites">tool...</string>
-    <string name="added_to_favorites">WINNER!!!!</string>
-    <string name="action_sort_by_favorite">Favorites</string>
-    <string name="action_share">Share</string>
-    <string name="stringReviews">Reviews</string>
-    <string name="api_key">02b76bacc0bae96fac560e964dcc23e9</string>
+    <string name="s_lbl_app">Nano Movies App</string>
+    <string name="s_lbl_sort">Sort</string>
+    <string name="s_btn_popular">Most Popular</string>
+    <string name="s_btn_rating">Highest Rated</string>
+    <string name="s_lbl_title">Details</string>
+    <string name="s_lbl_rating">Rating</string>
+    <string name="s_lbl_release">Released</string>
+    <string name="s_lbl_trailers">Trailers</string>
+    <string name="s_lbl_review">Reviews</string>
+    <string name="s_btn_favorite">Favorite</string>
+    <string name="s_con_auth">com.otatech.android.nanomoviesapp.movies</string>
+    <string name="s_msg_unfavorited">tool...</string>
+    <string name="s_msg_favorited">WINNER!!!!</string>
+    <string name="s_lbl_favorite">Favorites</string>
+    <string name="s_btn_share">Share</string>
+    <string name="s_api_key">02b76bacc0bae96fac560e964dcc23e9</string>
 </resources>

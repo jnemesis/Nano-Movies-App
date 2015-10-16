@@ -84,11 +84,11 @@ public class MainFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menuInflater.inflate(com.otatech.android.nanomoviesapp.movies.R.menu.main_menu, menu);
+        menuInflater.inflate(R.menu.main_menu, menu);
 
-        MenuItem miPopularitySort = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_popularity);
-        MenuItem miRatingsSort = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_rating);
-        MenuItem miFavoritesSort = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_favorite);
+        MenuItem miPopularitySort = menu.findItem(R.id.i_btn_popular);
+        MenuItem miRatingsSort = menu.findItem(R.id.i_btn_rating);
+        MenuItem miFavoritesSort = menu.findItem(R.id.i_btn_favorite);
 
         if (strSortBy.contentEquals(POPULARITYSORT)) {
             if (!miPopularitySort.isChecked()) {
@@ -109,7 +109,7 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         int intId = menuItem.getItemId();
         switch (intId) {
-            case com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_popularity:
+            case R.id.i_btn_popular:
                 if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                 } else {
@@ -118,7 +118,7 @@ public class MainFragment extends Fragment {
                 strSortBy = POPULARITYSORT;
                 updateMovies(strSortBy);
                 return true;
-            case R.id.action_sort_by_rating:
+            case R.id.i_btn_rating:
                 if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                 } else {
@@ -127,7 +127,7 @@ public class MainFragment extends Fragment {
                 strSortBy = RATINGSORT;
                 updateMovies(strSortBy);
                 return true;
-            case R.id.action_sort_by_favorite:
+            case R.id.i_btn_favorite:
                 if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                 } else {
@@ -145,7 +145,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.main_fragment, container, false);
-        gvGridView = (GridView) view.findViewById(R.id.gridview_movies);
+        gvGridView = (GridView) view.findViewById(R.id.gv_movies);
 
         mgAdapter = new Adapters(getActivity(), new ArrayList<Movie>());
 
@@ -234,7 +234,7 @@ public class MainFragment extends Fragment {
 
                 Uri uriBuilt = Uri.parse(BASEURL).buildUpon()
                         .appendQueryParameter(SORTBY, strParams[0])
-                        .appendQueryParameter(APIKEY, "02b76bacc0bae96fac560e964dcc23e9")
+                        .appendQueryParameter(APIKEY, getString(R.string.s_api_key))
                         .build();
 
                 URL url = new URL(uriBuilt.toString());

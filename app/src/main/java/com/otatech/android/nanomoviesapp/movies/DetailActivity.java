@@ -12,13 +12,13 @@ public class DetailActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             Bundle bundleArgs = new Bundle();
-            bundleArgs.putParcelable(DetailFragment.DETAIL_MOVIE,
-                    getIntent().getParcelableExtra(DetailFragment.DETAIL_MOVIE));
+            bundleArgs.putParcelable(DetailFragment.MOVIE_DETAILS,
+                    getIntent().getParcelableExtra(DetailFragment.MOVIE_DETAILS));
 
             DetailFragment detailFragment = new DetailFragment();
             detailFragment.setArguments(bundleArgs);
 
-            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container, detailFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fl_details, detailFragment).commit();
         }
     }
 }

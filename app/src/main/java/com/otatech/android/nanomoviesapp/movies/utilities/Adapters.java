@@ -97,8 +97,8 @@ public class Adapters extends BaseAdapter {
         public final TextView tvTitle;
 
         public ViewHolder(View view) {
-            ivImage = (ImageView) view.findViewById(R.id.grid_item_image);
-            tvTitle = (TextView) view.findViewById(R.id.grid_item_title);
+            ivImage = (ImageView) view.findViewById(R.id.iv_main_cover);
+            tvTitle = (TextView) view.findViewById(R.id.tv_main_title);
         }
     }
 
@@ -175,8 +175,8 @@ public class Adapters extends BaseAdapter {
             public final TextView tvContent;
 
             public ViewHolder(View view) {
-                tvAuthor = (TextView) view.findViewById(R.id.review_author);
-                tvContent = (TextView) view.findViewById(R.id.review_content);
+                tvAuthor = (TextView) view.findViewById(R.id.tv_critic);
+                tvContent = (TextView) view.findViewById(R.id.tv_rant);
             }
         }
 
@@ -253,7 +253,7 @@ public class Adapters extends BaseAdapter {
         public static class ViewHolder {
             public final ImageView imgView;
             public ViewHolder(View view) {
-                imgView = (ImageView) view.findViewById(R.id.trailer_image);
+                imgView = (ImageView) view.findViewById(R.id.iv_trailer_cover);
             }
         }
 
