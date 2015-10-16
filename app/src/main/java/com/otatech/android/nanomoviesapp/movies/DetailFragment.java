@@ -94,7 +94,7 @@ public class DetailFragment extends Fragment {
             inflater.inflate(R.menu.details_menu, menu);
 
             final MenuItem miWinnerOrTool = menu.findItem(R.id.i_btn_favorite);
-            MenuItem miPirate = menu.findItem(R.id.i_btn_share);
+            final MenuItem miPirate = menu.findItem(R.id.i_btn_share);
 
             new AsyncTask<Void, Void, Integer>() {
                 @Override
@@ -185,6 +185,8 @@ public class DetailFragment extends Fragment {
                         }
                     }.execute();
                 }
+                return true;
+            case R.id.i_btn_share:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
