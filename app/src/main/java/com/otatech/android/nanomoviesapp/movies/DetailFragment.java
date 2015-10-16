@@ -71,14 +71,13 @@ public class DetailFragment extends Fragment {
     private Adapters.TrailerAdapter trailerAdapter;
     private Adapters.ReviewAdapter reviewAdapter;
 
-    private ScrollView mDetailLayout;
+    private ScrollView svDetails;
 
-    private Toast mToast;
+    private Toast toasty;
 
-    private ShareActionProvider mShareActionProvider;
+    private ShareActionProvider shareProvider;
 
-    // the first trailer video to share
-    private Movie.Trailer mTrailer;
+    private Movie.Trailer mtTrailer;
 
     public DetailFragment() {
     }
@@ -94,57 +93,48 @@ public class DetailFragment extends Fragment {
         if (movie != null) {
             inflater.inflate(R.menu.menu_fragment_detail, menu);
 
-            final MenuItem action_favorite = menu.findItem(R.id.action_favorite);
-            MenuItem action_share = menu.findItem(R.id.action_share);
-            /*
-            action_favorite.setIcon(Utility.intWinner(getActivity(), movie.getIntId()) == 1 ?
-                    R.drawable.abc_btn_rating_star_on_mtrl_alpha :
-                    R.drawable.abc_btn_rating_star_off_mtrl_alpha);
-            */
+            final MenuItem miWinnerOrTool = menu.findItem(R.id.action_favorite);
+            MenuItem miPirate = menu.findItem(R.id.action_share);
+
             new AsyncTask<Void, Void, Integer>() {
                 @Override
-                protected Integer doInBackground(Void... params) {
+                protected Integer doInBackground(Void[] params) {
                     return Movie.Utility.intWinner(getActivity(), movie.getIntId());
                 }
 
                 @Override
                 protected void onPostExecute(Integer isFavorited) {
-                    action_favorite.setIcon(isFavorited == 1 ?
-                            R.drawable.prize_winner :
-                            R.drawable.tool);
+                    miWinnerOrTool.setIcon(isFavorited == 1 ?
+                            R.drawable.prize_winner : R.drawable.tool);
                 }
             }.execute();
 
-            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(action_share);
+            shareProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(miPirate);
 
-            if (mTrailer != null) {
-                mShareActionProvider.setShareIntent(createShareMovieIntent());
+            if (mtTrailer != null) {
+                shareProvider.setShareIntent(createShareMovieIntent());
             }
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
+        int intId = item.getItemId();
+        switch (intId) {
             case R.id.action_favorite:
                 if (movie != null) {
-                    // check if movie is in favorites or not
                     new AsyncTask<Void, Void, Integer>() {
-
                         @Override
-                        protected Integer doInBackground(Void... params) {
+                        protected Integer doInBackground(Void[] params) {
                             return Movie.Utility.intWinner(getActivity(), movie.getIntId());
                         }
 
                         @Override
-                        protected void onPostExecute(Integer isFavorited) {
-                            // if it is in favorites
-                            if (isFavorited == 1) {
-                                // delete from favorites
+                        protected void onPostExecute(Integer intWinner) {
+                            if (intWinner == 1) {
                                 new AsyncTask<Void, Void, Integer>() {
                                     @Override
-                                    protected Integer doInBackground(Void... params) {
+                                    protected Integer doInBackground(Void[] params) {
                                         return getActivity().getContentResolver().delete(
                                                 DbContract.MovieEntry.MOVIEURI,
                                                 DbContract.MovieEntry.MOVIEID + " = ?",
@@ -153,22 +143,20 @@ public class DetailFragment extends Fragment {
                                     }
 
                                     @Override
-                                    protected void onPostExecute(Integer rowsDeleted) {
+                                    protected void onPostExecute(Integer intDeletedRows) {
                                         item.setIcon(R.drawable.tool);
-                                        if (mToast != null) {
-                                            mToast.cancel();
+                                        if (toasty != null) {
+                                            toasty.cancel();
                                         }
-                                        mToast = Toast.makeText(getActivity(), getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT);
-                                        mToast.show();
+                                        toasty = Toast.makeText(getActivity(), getString(R.string.removed_from_favorites), Toast.LENGTH_SHORT);
+                                        toasty.show();
                                     }
                                 }.execute();
                             }
-                            // if it is not in favorites
                             else {
-                                // add to favorites
                                 new AsyncTask<Void, Void, Uri>() {
                                     @Override
-                                    protected Uri doInBackground(Void... params) {
+                                    protected Uri doInBackground(Void[] params) {
                                         ContentValues values = new ContentValues();
 
                                         values.put(DbContract.MovieEntry.MOVIEID, movie.getIntId());
@@ -184,13 +172,13 @@ public class DetailFragment extends Fragment {
                                     }
 
                                     @Override
-                                    protected void onPostExecute(Uri returnUri) {
+                                    protected void onPostExecute(Uri uriRet) {
                                         item.setIcon(R.drawable.prize_winner);
-                                        if (mToast != null) {
-                                            mToast.cancel();
+                                        if (toasty != null) {
+                                            toasty.cancel();
                                         }
-                                        mToast = Toast.makeText(getActivity(), getString(R.string.added_to_favorites), Toast.LENGTH_SHORT);
-                                        mToast.show();
+                                        toasty = Toast.makeText(getActivity(), getString(R.string.added_to_favorites), Toast.LENGTH_SHORT);
+                                        toasty.show();
                                     }
                                 }.execute();
                             }
@@ -204,47 +192,45 @@ public class DetailFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        Bundle arguments = getArguments();
-        if (arguments != null) {
-            movie = arguments.getParcelable(DetailFragment.DETAIL_MOVIE);
+        Bundle bundleArgs = getArguments();
+        if (bundleArgs != null) {
+            movie = bundleArgs.getParcelable(DetailFragment.DETAIL_MOVIE);
         }
 
-        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        View viewRoot = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        mDetailLayout = (ScrollView) rootView.findViewById(R.id.detail_layout);
+        svDetails = (ScrollView) viewRoot.findViewById(R.id.detail_layout);
 
         if (movie != null) {
-            mDetailLayout.setVisibility(View.VISIBLE);
+            svDetails.setVisibility(View.VISIBLE);
         } else {
-            mDetailLayout.setVisibility(View.INVISIBLE);
+            svDetails.setVisibility(View.INVISIBLE);
         }
 
-        ivCover = (ImageView) rootView.findViewById(R.id.detail_image);
+        ivCover = (ImageView) viewRoot.findViewById(R.id.detail_image);
 
-        tvTitle = (TextView) rootView.findViewById(R.id.detail_title);
-        tvPlot = (TextView) rootView.findViewById(R.id.detail_overview);
-        tvRelease = (TextView) rootView.findViewById(R.id.detail_date);
-        tvRatings = (TextView) rootView.findViewById(R.id.detail_vote_average);
+        tvTitle = (TextView) viewRoot.findViewById(R.id.detail_title);
+        tvPlot = (TextView) viewRoot.findViewById(R.id.detail_overview);
+        tvRelease = (TextView) viewRoot.findViewById(R.id.detail_date);
+        tvRatings = (TextView) viewRoot.findViewById(R.id.detail_vote_average);
 
-        llvTrailers = (LinearListView) rootView.findViewById(R.id.detail_trailers);
-        llvReviews = (LinearListView) rootView.findViewById(R.id.detail_reviews);
+        llvTrailers = (LinearListView) viewRoot.findViewById(R.id.detail_trailers);
+        llvReviews = (LinearListView) viewRoot.findViewById(R.id.detail_reviews);
 
-        cvReviewSpace = (CardView) rootView.findViewById(R.id.detail_reviews_cardview);
-        cvTrailerSpace = (CardView) rootView.findViewById(R.id.detail_trailers_cardview);
+        cvReviewSpace = (CardView) viewRoot.findViewById(R.id.detail_reviews_cardview);
+        cvTrailerSpace = (CardView) viewRoot.findViewById(R.id.detail_trailers_cardview);
 
         trailerAdapter = new Adapters.TrailerAdapter(getActivity(), new ArrayList<Movie.Trailer>());
         llvTrailers.setAdapter(trailerAdapter);
 
         llvTrailers.setOnItemClickListener(new LinearListView.OnItemClickListener() {
             @Override
-            public void onItemClick(LinearListView linearListView, View view,
-                                    int position, long id) {
-                Movie.Trailer trailer = trailerAdapter.getItem(position);
+            public void onItemClick(LinearListView linearListView, View view, int intPos, long id) {
+                Movie.Trailer movTrailer = trailerAdapter.getItem(intPos);
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("http://www.youtube.com/watch?v=" + trailer.getStrKey()));
+                intent.setData(Uri.parse("http://www.youtube.com/watch?v=" + movTrailer.getStrKey()));
                 startActivity(intent);
             }
         });
@@ -254,28 +240,28 @@ public class DetailFragment extends Fragment {
 
         if (movie != null) {
 
-            String image_url = Movie.Utility.strBuildURL(342, movie.getStrBackDrop());
+            String strCoverURL = Movie.Utility.strBuildURL(342, movie.getStrBackDrop());
 
-            Glide.with(this).load(image_url).into(ivCover);
+            Glide.with(this).load(strCoverURL).into(ivCover);
 
             tvTitle.setText(movie.getStrTitle());
             tvPlot.setText(movie.getStrPlot());
 
-            String movie_date = movie.getStrRelease();
+            String strMovieRelease = movie.getStrRelease();
 
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                String date = DateUtils.formatDateTime(getActivity(),
-                        formatter.parse(movie_date).getTime(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR);
-                tvRelease.setText(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
+                String strDate = DateUtils.formatDateTime(getActivity(),
+                        formatter.parse(strMovieRelease).getTime(), DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR);
+                tvRelease.setText(strDate);
+            } catch (ParseException pe) {
+                pe.printStackTrace();
             }
 
             tvRatings.setText(Integer.toString(movie.getIntRatings()));
         }
 
-        return rootView;
+        return viewRoot;
     }
 
     @Override
@@ -288,12 +274,12 @@ public class DetailFragment extends Fragment {
     }
 
     private Intent createShareMovieIntent() {
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, movie.getStrTitle() + " " +
-                "http://www.youtube.com/watch?v=" + mTrailer.getStrKey());
-        return shareIntent;
+        Intent intentShare = new Intent(Intent.ACTION_SEND);
+        intentShare.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        intentShare.setType("text/plain");
+        intentShare.putExtra(Intent.EXTRA_TEXT, movie.getStrTitle() + " " +
+                "http://www.youtube.com/watch?v=" + mtTrailer.getStrKey());
+        return intentShare;
     }
 
     public class FetchTrailersTask extends AsyncTask<String, Void, List<Movie.Trailer>> {
@@ -301,110 +287,103 @@ public class DetailFragment extends Fragment {
         private final String LOG_TAG = FetchTrailersTask.class.getSimpleName();
 
         private List<Movie.Trailer> getTrailersDataFromJson(String jsonStr) throws JSONException {
-            JSONObject trailerJson = new JSONObject(jsonStr);
-            JSONArray trailerArray = trailerJson.getJSONArray("results");
+            JSONObject jsonObjTrailer = new JSONObject(jsonStr);
+            JSONArray jsonArrTrailer = jsonObjTrailer.getJSONArray("results");
 
-            List<Movie.Trailer> results = new ArrayList<>();
+            List<Movie.Trailer> lstTrailerResults = new ArrayList<>();
 
-            for(int i = 0; i < trailerArray.length(); i++) {
-                JSONObject trailer = trailerArray.getJSONObject(i);
-                // Only show Trailers which are on Youtube
+            for(int i = 0; i < jsonArrTrailer.length(); i++) {
+                JSONObject trailer = jsonArrTrailer.getJSONObject(i);
                 if (trailer.getString("site").contentEquals("YouTube")) {
                     Movie.Trailer trailerModel = new Movie.Trailer(trailer);
-                    results.add(trailerModel);
+                    lstTrailerResults.add(trailerModel);
                 }
             }
-
-            return results;
+            return lstTrailerResults;
         }
 
         @Override
-        protected List<Movie.Trailer> doInBackground(String... params) {
+        protected List<Movie.Trailer> doInBackground(String[] params) {
 
             if (params.length == 0) {
                 return null;
             }
 
             HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
+            BufferedReader bufferedReader = null;
 
-            String jsonStr = null;
+            String strJSON = null;
 
             try {
-                final String BASE_URL = "http://api.themoviedb.org/3/movie/" + params[0] + "/videos";
-                final String API_KEY_PARAM = "api_key";
+                final String BASEURL = "http://api.themoviedb.org/3/movie/" + params[0] + "/videos";
+                final String APIKEY = "api_key";
 
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(API_KEY_PARAM, getString(R.string.api_key))
+                Uri uriBuilt = Uri.parse(BASEURL).buildUpon()
+                        .appendQueryParameter(APIKEY, getString(R.string.api_key))
                         .build();
 
-                URL url = new URL(builtUri.toString());
+                URL url = new URL(uriBuilt.toString());
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuffer stringBuffer = new StringBuffer();
                 if (inputStream == null) {
                     return null;
                 }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
+                String strLine;
+                while ((strLine = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(strLine + "\n");
                 }
 
-                if (buffer.length() == 0) {
+                if (stringBuffer.length() == 0) {
                     return null;
                 }
-                jsonStr = buffer.toString();
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error ", e);
+                strJSON = stringBuffer.toString();
+            } catch (IOException ioe) {
+                Log.wtf(LOG_TAG, "Error ", ioe);
                 return null;
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
-                if (reader != null) {
+                if (bufferedReader != null) {
                     try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
+                        bufferedReader.close();
+                    } catch (final IOException ioe) {
+                        Log.wtf(LOG_TAG, "Error closing stream", ioe);
                     }
                 }
             }
 
             try {
-                return getTrailersDataFromJson(jsonStr);
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, e.getMessage(), e);
-                e.printStackTrace();
+                return getTrailersDataFromJson(strJSON);
+            } catch (JSONException je) {
+                Log.wtf(LOG_TAG, je.getMessage(), je);
+                je.printStackTrace();
             }
-
-            // This will only happen if there was an error getting or parsing the forecast.
             return null;
         }
 
         @Override
-        protected void onPostExecute(List<Movie.Trailer> trailers) {
-            if (trailers != null) {
-                if (trailers.size() > 0) {
+        protected void onPostExecute(List<Movie.Trailer> lstTrailers) {
+            if (lstTrailers != null) {
+                if (lstTrailers.size() > 0) {
                     cvTrailerSpace.setVisibility(View.VISIBLE);
                     if (trailerAdapter != null) {
                         trailerAdapter.clear();
-                        for (Movie.Trailer trailer : trailers) {
+                        for (Movie.Trailer trailer : lstTrailers) {
                             trailerAdapter.add(trailer);
                         }
                     }
 
-                    mTrailer = trailers.get(0);
-                    if (mShareActionProvider != null) {
-                        mShareActionProvider.setShareIntent(createShareMovieIntent());
+                    mtTrailer = lstTrailers.get(0);
+                    if (shareProvider != null) {
+                        shareProvider.setShareIntent(createShareMovieIntent());
                     }
                 }
             }
@@ -415,100 +394,95 @@ public class DetailFragment extends Fragment {
 
         private final String LOG_TAG = FetchReviewsTask.class.getSimpleName();
 
-        private List<Movie.Review> getReviewsDataFromJson(String jsonStr) throws JSONException {
-            JSONObject reviewJson = new JSONObject(jsonStr);
-            JSONArray reviewArray = reviewJson.getJSONArray("results");
+        private List<Movie.Review> getReviewsDataFromJson(String strJSON) throws JSONException {
+            JSONObject jsonObjReview = new JSONObject(strJSON);
+            JSONArray jsonArrReview = jsonObjReview.getJSONArray("results");
 
-            List<Movie.Review> results = new ArrayList<>();
+            List<Movie.Review> lstReviewResults = new ArrayList<>();
 
-            for(int i = 0; i < reviewArray.length(); i++) {
-                JSONObject review = reviewArray.getJSONObject(i);
-                results.add(new Movie.Review(review));
+            for(int i = 0; i < jsonArrReview.length(); i++) {
+                JSONObject jsonObject = jsonArrReview.getJSONObject(i);
+                lstReviewResults.add(new Movie.Review(jsonObject));
             }
 
-            return results;
+            return lstReviewResults;
         }
 
         @Override
-        protected List<Movie.Review> doInBackground(String... params) {
+        protected List<Movie.Review> doInBackground(String[] params) {
 
             if (params.length == 0) {
                 return null;
             }
 
             HttpURLConnection urlConnection = null;
-            BufferedReader reader = null;
+            BufferedReader bufferedReader = null;
 
-            String jsonStr = null;
+            String strJSON = null;
 
             try {
-                final String BASE_URL = "http://api.themoviedb.org/3/movie/" + params[0] + "/reviews";
-                final String API_KEY_PARAM = "api_key";
+                final String BASEURL = "http://api.themoviedb.org/3/movie/" + params[0] + "/reviews";
+                final String APIKEY = "api_key";
 
-                Uri builtUri = Uri.parse(BASE_URL).buildUpon()
-                        .appendQueryParameter(API_KEY_PARAM, getString(R.string.api_key))
+                Uri uriBuilt = Uri.parse(BASEURL).buildUpon()
+                        .appendQueryParameter(APIKEY, getString(R.string.api_key))
                         .build();
 
-                URL url = new URL(builtUri.toString());
+                URL url = new URL(uriBuilt.toString());
 
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
 
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuffer stringBuffer = new StringBuffer();
                 if (inputStream == null) {
                     return null;
                 }
-                reader = new BufferedReader(new InputStreamReader(inputStream));
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
-                    // But it does make debugging a *lot* easier if you print out the completed
-                    // buffer for debugging.
-                    buffer.append(line + "\n");
+                String strLine;
+                while ((strLine = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(strLine + "\n");
                 }
 
-                if (buffer.length() == 0) {
+                if (stringBuffer.length() == 0) {
                     return null;
                 }
-                jsonStr = buffer.toString();
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error ", e);
+                strJSON = stringBuffer.toString();
+            } catch (IOException ioe) {
+                Log.wtf(LOG_TAG, "Error ", ioe);
                 return null;
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
-                if (reader != null) {
+                if (bufferedReader != null) {
                     try {
-                        reader.close();
-                    } catch (final IOException e) {
-                        Log.e(LOG_TAG, "Error closing stream", e);
+                        bufferedReader.close();
+                    } catch (final IOException ioe) {
+                        Log.wtf(LOG_TAG, "Error closing stream", ioe);
                     }
                 }
             }
 
             try {
-                return getReviewsDataFromJson(jsonStr);
-            } catch (JSONException e) {
-                Log.e(LOG_TAG, e.getMessage(), e);
-                e.printStackTrace();
+                return getReviewsDataFromJson(strJSON);
+            } catch (JSONException je) {
+                Log.wtf(LOG_TAG, je.getMessage(), je);
+                je.printStackTrace();
             }
-
-            // This will only happen if there was an error getting or parsing the forecast.
             return null;
         }
 
         @Override
-        protected void onPostExecute(List<Movie.Review> reviews) {
-            if (reviews != null) {
-                if (reviews.size() > 0) {
+        protected void onPostExecute(List<Movie.Review> lstReviews) {
+            if (lstReviews != null) {
+                if (lstReviews.size() > 0) {
                     cvReviewSpace.setVisibility(View.VISIBLE);
                     if (reviewAdapter != null) {
                         reviewAdapter.clear();
-                        for (Movie.Review review : reviews) {
+                        for (Movie.Review review : lstReviews) {
                             reviewAdapter.add(review);
                         }
                     }
