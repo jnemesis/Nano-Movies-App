@@ -15,15 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-
 import com.otatech.android.nanomoviesapp.movies.utilities.Adapters;
 import com.otatech.android.nanomoviesapp.movies.utilities.DbContract;
 import com.otatech.android.nanomoviesapp.movies.utilities.Movie;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,8 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragment extends Fragment {
-
-    private GridView gvGridView;
 
     private Adapters mgAdapter;
 
@@ -145,7 +140,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.main_fragment, container, false);
-        gvGridView = (GridView) view.findViewById(R.id.gv_movies);
+        GridView gvGridView = (GridView) view.findViewById(R.id.gv_movies);
 
         mgAdapter = new Adapters(getActivity(), new ArrayList<Movie>());
 
