@@ -1,5 +1,4 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="d_fontsize">16sp</dimen>
     <dimen name="d_horizon">16dp</dimen>
     <dimen name="d_movie_h">170dp</dimen>

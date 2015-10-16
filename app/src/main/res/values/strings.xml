@@ -10,8 +10,8 @@
     <string name="s_lbl_review">Reviews</string>
     <string name="s_btn_favorite">Favorite</string>
     <string name="s_con_auth">com.otatech.android.nanomoviesapp.movies</string>
-    <string name="s_msg_unfavorited">tool...</string>
-    <string name="s_msg_favorited">WINNER!!!!</string>
+    <string name="s_msg_unfavorited">tool...movie unfavorited...</string>
+    <string name="s_msg_favorited">WINNER!!!!Added to your favorites!!!</string>
     <string name="s_lbl_favorite">Favorites</string>
     <string name="s_btn_share">Share</string>
     <string name="s_api_key">02b76bacc0bae96fac560e964dcc23e9</string>
