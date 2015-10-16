@@ -83,24 +83,24 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(com.otatech.android.nanomoviesapp.movies.R.menu.menu_fragment_main, menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        menuInflater.inflate(com.otatech.android.nanomoviesapp.movies.R.menu.main_menu, menu);
 
-        MenuItem action_sort_by_popularity = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_popularity);
-        MenuItem action_sort_by_rating = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_rating);
-        MenuItem action_sort_by_favorite = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_favorite);
+        MenuItem miPopularitySort = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_popularity);
+        MenuItem miRatingsSort = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_rating);
+        MenuItem miFavoritesSort = menu.findItem(com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_favorite);
 
         if (strSortBy.contentEquals(POPULARITYSORT)) {
-            if (!action_sort_by_popularity.isChecked()) {
-                action_sort_by_popularity.setChecked(true);
+            if (!miPopularitySort.isChecked()) {
+                miPopularitySort.setChecked(true);
             }
         } else if (strSortBy.contentEquals(RATINGSORT)) {
-            if (!action_sort_by_rating.isChecked()) {
-                action_sort_by_rating.setChecked(true);
+            if (!miRatingsSort.isChecked()) {
+                miRatingsSort.setChecked(true);
             }
         } else if (strSortBy.contentEquals(FAVORITESORT)) {
-            if (!action_sort_by_popularity.isChecked()) {
-                action_sort_by_favorite.setChecked(true);
+            if (!miPopularitySort.isChecked()) {
+                miFavoritesSort.setChecked(true);
             }
         }
     }
@@ -118,7 +118,7 @@ public class MainFragment extends Fragment {
                 strSortBy = POPULARITYSORT;
                 updateMovies(strSortBy);
                 return true;
-            case com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_rating:
+            case R.id.action_sort_by_rating:
                 if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                 } else {
@@ -127,7 +127,7 @@ public class MainFragment extends Fragment {
                 strSortBy = RATINGSORT;
                 updateMovies(strSortBy);
                 return true;
-            case com.otatech.android.nanomoviesapp.movies.R.id.action_sort_by_favorite:
+            case R.id.action_sort_by_favorite:
                 if (menuItem.isChecked()) {
                     menuItem.setChecked(false);
                 } else {
@@ -144,8 +144,8 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(com.otatech.android.nanomoviesapp.movies.R.layout.fragment_main, container, false);
-        gvGridView = (GridView) view.findViewById(com.otatech.android.nanomoviesapp.movies.R.id.gridview_movies);
+        View view = inflater.inflate(R.layout.main_fragment, container, false);
+        gvGridView = (GridView) view.findViewById(R.id.gridview_movies);
 
         mgAdapter = new Adapters(getActivity(), new ArrayList<Movie>());
 
@@ -153,8 +153,8 @@ public class MainFragment extends Fragment {
 
         gvGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Movie movie = mgAdapter.getItem(position);
+            public void onItemClick(AdapterView<?> parent, View view, int intPos, long id) {
+                Movie movie = mgAdapter.getItem(intPos);
                 ((Callback) getActivity()).onItemSelected(movie);
             }
         });
@@ -177,9 +177,9 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    private void updateMovies(String sort_by) {
-        if (!sort_by.contentEquals(FAVORITESORT)) {
-            new FetchMoviesTask().execute(sort_by);
+    private void updateMovies(String strSortBy) {
+        if (!strSortBy.contentEquals(FAVORITESORT)) {
+            new FetchMoviesTask().execute(strSortBy);
         } else {
             new FetchFavoriteMoviesTask(getActivity()).execute();
         }
@@ -200,14 +200,14 @@ public class MainFragment extends Fragment {
 
         private final String LOGTAG = FetchMoviesTask.class.getSimpleName();
 
-        private List<Movie> getMoviesDataFromJson(String strJSON) throws JSONException {
-            JSONObject jsonMovie = new JSONObject(strJSON);
-            JSONArray jarrMovies = jsonMovie.getJSONArray("results");
+        private List<Movie> lstJSONMoviesData(String strJSON) throws JSONException {
+            JSONObject jsonObjMovie = new JSONObject(strJSON);
+            JSONArray jsonArrMovies = jsonObjMovie.getJSONArray("results");
 
             List<Movie> lstMovies = new ArrayList<>();
 
-            for(int i = 0; i < jarrMovies.length(); i++) {
-                JSONObject jsonMovieObject = jarrMovies.getJSONObject(i);
+            for(int i = 0; i < jsonArrMovies.length(); i++) {
+                JSONObject jsonMovieObject = jsonArrMovies.getJSONObject(i);
                 Movie movieModel = new Movie(jsonMovieObject);
                 lstMovies.add(movieModel);
             }
@@ -234,7 +234,7 @@ public class MainFragment extends Fragment {
 
                 Uri uriBuilt = Uri.parse(BASEURL).buildUpon()
                         .appendQueryParameter(SORTBY, strParams[0])
-                        .appendQueryParameter(APIKEY, getString(com.otatech.android.nanomoviesapp.movies.R.string.api_key))
+                        .appendQueryParameter(APIKEY, "02b76bacc0bae96fac560e964dcc23e9")
                         .build();
 
                 URL url = new URL(uriBuilt.toString());
@@ -244,7 +244,7 @@ public class MainFragment extends Fragment {
                 urlConnection.connect();
 
                 InputStream inputStream = urlConnection.getInputStream();
-                StringBuffer strBuffer = new StringBuffer();
+                StringBuffer stringBuffer = new StringBuffer();
                 if (inputStream == null) {
                     return null;
                 }
@@ -252,15 +252,15 @@ public class MainFragment extends Fragment {
 
                 String strLine;
                 while ((strLine = bufferedReader.readLine()) != null) {
-                    strBuffer.append(strLine + "\n");
+                    stringBuffer.append(strLine + "\n");
                 }
 
-                if (strBuffer.length() == 0) {
+                if (stringBuffer.length() == 0) {
                     return null;
                 }
-                strJSON = strBuffer.toString();
-            } catch (IOException e) {
-                Log.wtf(LOGTAG, "Error ", e);
+                strJSON = stringBuffer.toString();
+            } catch (IOException ioe) {
+                Log.wtf(LOGTAG, "Error ", ioe);
                 return null;
             } finally {
                 if (urlConnection != null) {
@@ -269,17 +269,17 @@ public class MainFragment extends Fragment {
                 if (bufferedReader != null) {
                     try {
                         bufferedReader.close();
-                    } catch (final IOException e) {
-                        Log.wtf(LOGTAG, "Error closing stream", e);
+                    } catch (final IOException ioe) {
+                        Log.wtf(LOGTAG, "Error closing stream", ioe);
                     }
                 }
             }
 
             try {
-                return getMoviesDataFromJson(strJSON);
-            } catch (JSONException e) {
-                Log.wtf(LOGTAG, e.getMessage(), e);
-                e.printStackTrace();
+                return lstJSONMoviesData(strJSON);
+            } catch (JSONException je) {
+                Log.wtf(LOGTAG, je.getMessage(), je);
+                je.printStackTrace();
             }
             return null;
         }

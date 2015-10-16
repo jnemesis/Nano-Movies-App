@@ -8,17 +8,17 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.details_activity);
 
         if (savedInstanceState == null) {
-            Bundle arguments = new Bundle();
-            arguments.putParcelable(DetailFragment.DETAIL_MOVIE,
+            Bundle bundleArgs = new Bundle();
+            bundleArgs.putParcelable(DetailFragment.DETAIL_MOVIE,
                     getIntent().getParcelableExtra(DetailFragment.DETAIL_MOVIE));
 
-            DetailFragment fragment = new DetailFragment();
-            fragment.setArguments(arguments);
+            DetailFragment detailFragment = new DetailFragment();
+            detailFragment.setArguments(bundleArgs);
 
-            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container, fragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.movie_detail_container, detailFragment).commit();
         }
     }
 }

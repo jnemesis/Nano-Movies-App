@@ -91,7 +91,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         if (movie != null) {
-            inflater.inflate(R.menu.menu_fragment_detail, menu);
+            inflater.inflate(R.menu.details_menu, menu);
 
             final MenuItem miWinnerOrTool = menu.findItem(R.id.action_favorite);
             MenuItem miPirate = menu.findItem(R.id.action_share);
@@ -199,7 +199,7 @@ public class DetailFragment extends Fragment {
             movie = bundleArgs.getParcelable(DetailFragment.DETAIL_MOVIE);
         }
 
-        View viewRoot = inflater.inflate(R.layout.fragment_detail, container, false);
+        View viewRoot = inflater.inflate(R.layout.details_fragment, container, false);
 
         svDetails = (ScrollView) viewRoot.findViewById(R.id.detail_layout);
 

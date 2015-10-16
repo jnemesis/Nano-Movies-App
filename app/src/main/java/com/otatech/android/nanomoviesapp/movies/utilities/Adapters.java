@@ -75,7 +75,7 @@ public class Adapters extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (view == null) {
-            view = layInflater.inflate(R.layout.grid_item_movie, parent, false);
+            view = layInflater.inflate(R.layout.movies_grid, parent, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         }
@@ -155,7 +155,7 @@ public class Adapters extends BaseAdapter {
             ViewHolder viewHolder;
 
             if (view == null) {
-                view = loInflater.inflate(R.layout.item_movie_review, parent, false);
+                view = loInflater.inflate(R.layout.movie_reviews, parent, false);
                 viewHolder = new ViewHolder(view);
                 view.setTag(viewHolder);
             }
@@ -235,7 +235,7 @@ public class Adapters extends BaseAdapter {
             ViewHolder viewHolder;
 
             if (view == null) {
-                view = loInflater.inflate(R.layout.item_movie_trailer, parent, false);
+                view = loInflater.inflate(R.layout.movie_trailers, parent, false);
                 viewHolder = new ViewHolder(view);
                 view.setTag(viewHolder);
             }

@@ -8,35 +8,35 @@ import com.otatech.android.nanomoviesapp.movies.utilities.Movie;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.Callback {
 
-    private boolean mTwoPane;
+    private boolean boolPanes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         if (findViewById(R.id.movie_detail_container) != null) {
-            mTwoPane = true;
+            boolPanes = true;
             if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.movie_detail_container,
                         new DetailFragment(), DetailFragment.TAG).commit();
             }
         } else {
-            mTwoPane = false;
+            boolPanes = false;
         }
     }
 
     @Override
     public void onItemSelected(Movie movie) {
-        if (mTwoPane) {
-            Bundle arguments = new Bundle();
-            arguments.putParcelable(DetailFragment.DETAIL_MOVIE, movie);
+        if (boolPanes) {
+            Bundle bundleArgs = new Bundle();
+            bundleArgs.putParcelable(DetailFragment.DETAIL_MOVIE, movie);
 
-            DetailFragment fragment = new DetailFragment();
-            fragment.setArguments(arguments);
+            DetailFragment detailFragment = new DetailFragment();
+            detailFragment.setArguments(bundleArgs);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.movie_detail_container, fragment, DetailFragment.TAG)
+                    .replace(R.id.movie_detail_container, detailFragment, DetailFragment.TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
