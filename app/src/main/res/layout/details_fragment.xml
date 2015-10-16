@@ -14,7 +14,8 @@
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/s_cover_desc"/>
 
         <TextView
             android:id="@+id/tv_title"
@@ -25,15 +26,16 @@
             android:gravity="center_horizontal"
             android:layout_centerVertical="true"
             android:textColor="@android:color/white"
-            android:background="#80000000" />
+            android:background="#80000FFF" />
 
-     </RelativeLayout>
+    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/sv_layout"
         android:visibility="invisible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp">
 
         <LinearLayout
             android:orientation="vertical"

@@ -3,33 +3,32 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="@dimen/d_movie_h">
 
-
-
     <ImageView
         android:id="@+id/iv_main_cover"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/s_cover_desc"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/tv_main_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            android:padding="5dp"
-            android:layout_centerVertical="true"
-            android:gravity="center_horizontal"
-            android:ellipsize="end"
-            android:textColor="@android:color/white"
-            android:background="#80000000"/>
+            android:layout_height="match_parent">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_main_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:layout_centerVertical="true"
+                android:gravity="center_horizontal"
+                android:ellipsize="end"
+                android:textColor="@android:color/white"
+                android:background="#80000FFF"/>
+
+        </RelativeLayout>
 
 </FrameLayout>

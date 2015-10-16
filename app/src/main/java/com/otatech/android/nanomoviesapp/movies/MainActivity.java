@@ -15,10 +15,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        if (findViewById(R.id.fl_details) != null) {
+        if (findViewById(R.id.fl_container) != null) {
             boolPanes = true;
             if (savedInstanceState == null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fl_details,
+                getSupportFragmentManager().beginTransaction().replace(R.id.fl_container,
                         new DetailFragment(), DetailFragment.TAG).commit();
             }
         } else {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.Call
             detailFragment.setArguments(bundleArgs);
 
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fl_details, detailFragment, DetailFragment.TAG)
+                    .replace(R.id.fl_container, detailFragment, DetailFragment.TAG)
                     .commit();
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
