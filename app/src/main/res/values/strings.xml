@@ -1,0 +1,19 @@
+<resources>
+    <string name="s_lbl_app">Nano Movies App</string>
+    <string name="s_lbl_sort">Sort</string>
+    <string name="s_btn_popular">Popular</string>
+    <string name="s_btn_rating">Rated</string>
+    <string name="s_lbl_title">Details</string>
+    <string name="s_lbl_rating">Rating</string>
+    <string name="s_lbl_release">Released</string>
+    <string name="s_lbl_trailers">Trailers</string>
+    <string name="s_lbl_review">Reviews</string>
+    <string name="s_btn_favorite">Favorite</string>
+    <string name="s_con_auth">com.otatech.android.nanomoviesapp.movies</string>
+    <string name="s_msg_unfavorited">tool…movie unfavorited…</string>
+    <string name="s_msg_favorited">WINNER!!!!Added to your favorites!!!</string>
+    <string name="s_lbl_favorite">Favorites</string>
+    <string name="s_btn_share">Share</string>
+    <string name="s_cover_desc">Movie Covers</string>
+    <string name="s_api_key">02b76bacc0bae96fac560e964dcc23e9</string>
+</resources>

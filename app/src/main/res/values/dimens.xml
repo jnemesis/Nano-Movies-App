@@ -1,0 +1,9 @@
+<resources>
+    <dimen name="d_fontsize">16sp</dimen>
+    <dimen name="d_horizon">16dp</dimen>
+    <dimen name="d_movie_h">170dp</dimen>
+    <dimen name="d_movie_w">100dp</dimen>
+    <dimen name="d_spacing">5dp</dimen>
+    <dimen name="d_trailer_h">240dp</dimen>
+    <dimen name="d_vert">16dp</dimen>
+</resources>
