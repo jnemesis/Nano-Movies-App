@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup=1
+        android:allowBackup="true"
         android:icon="@mipmap/app_icon"
         android:label="@string/s_lbl_app"
         android:theme="@style/AppTheme" >
